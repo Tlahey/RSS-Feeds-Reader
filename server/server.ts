@@ -1,6 +1,7 @@
 import * as Express from "express";
 import {ServerLoader, ServerSettings, Delete, Authenticated, BodyParams, Required, GlobalAcceptMimesMiddleware} from "@tsed/common";
 import Path = require("path");
+import "@tsed/servestatic";
 const rootDir = Path.resolve(__dirname);
 
 @ServerSettings({
@@ -8,6 +9,9 @@ const rootDir = Path.resolve(__dirname);
     acceptMimes: ["application/json"],
     mount: {
         '/rest': `${rootDir}/controllers/*.js`
+    },
+    serveStatic: {
+        "/": `${rootDir}/../webapp`
     }
 })
 export class Server extends ServerLoader {
