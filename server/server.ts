@@ -11,7 +11,7 @@ const rootDir = Path.resolve(__dirname);
         '/rest': `${rootDir}/controllers/*.js`
     },
     serveStatic: {
-        "/": `${rootDir}/../webapp`
+        "/": `${rootDir}/webapp`
     }
 })
 export class Server extends ServerLoader {

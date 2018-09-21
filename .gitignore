@@ -1,7 +1,5 @@
-/node_modules
+**/node_modules
 /server/server.js
 /server/server.js.map
-/server/controllers/*.js
-/server/controllers/*.map
-/server/services/*.js
-/server/services/*.map
+/server/**/*.js
+/server/**/*.map
