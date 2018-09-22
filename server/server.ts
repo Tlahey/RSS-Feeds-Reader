@@ -1,7 +1,10 @@
 import * as Express from "express";
 import {ServerLoader, ServerSettings, Delete, Authenticated, BodyParams, Required, GlobalAcceptMimesMiddleware} from "@tsed/common";
 import Path = require("path");
+
 import "@tsed/servestatic";
+import "@tsed/socketio";
+
 const rootDir = Path.resolve(__dirname);
 
 @ServerSettings({
@@ -12,6 +15,10 @@ const rootDir = Path.resolve(__dirname);
     },
     serveStatic: {
         "/": `${rootDir}/webapp`
+    },
+    socketIO:{
+        path: "/socket",
+        origin: "*"
     }
 })
 export class Server extends ServerLoader {

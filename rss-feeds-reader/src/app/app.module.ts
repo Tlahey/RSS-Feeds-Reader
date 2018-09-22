@@ -4,9 +4,11 @@ import { ActivatedRoute, Routes, RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
 import { HttpClientModule } from '@angular/common/http';
+import { SocketOne } from './socket';
+import { SocketIoModule } from 'ngx-socket-io';
 
 export const routes: Routes = [
-  { path: '',   redirectTo: '/information', pathMatch: 'full' }
+  { path: '',   redirectTo: '/home', pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -14,12 +16,12 @@ export const routes: Routes = [
     AppComponent
   ],
   imports: [
+    SocketIoModule,
     MaterialModule,
     BrowserModule,
-    HttpClientModule,
-    RouterModule.forRoot(routes)
+    HttpClientModule
   ],
-  providers: [],
+  providers: [SocketOne],
   bootstrap: [AppComponent]
 })
 export class AppModule { 
