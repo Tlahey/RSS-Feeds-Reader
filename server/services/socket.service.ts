@@ -1,13 +1,10 @@
 import * as SocketIO from "socket.io";
 import {SocketService, IO, Nsp, Socket, SocketSession, Input, Args, Emit} from "@tsed/socketio";
 
-@SocketService("/my")
+@SocketService("/RSS")
 export class MySocketService {
 
     @Nsp nsp: SocketIO.Namespace;
-
-    @Nsp("/my-other-namespace") 
-    nspOther: SocketIO.Namespace; // communication between two namespace
 
     constructor(@IO private io: SocketIO.Server) {}
     /**
@@ -15,13 +12,14 @@ export class MySocketService {
      */
     $onNamespaceInit(nsp: SocketIO.Namespace) {
         console.log("------ init namespace ", nsp.name);
+        // Réaliser un interval pour récupérer les sockets via la configuration
     }
     /**
      * Triggered when a new client connects to the Namespace.
      */
     $onConnection(@Socket socket: SocketIO.Socket, @SocketSession session: SocketSession) {
         console.log("------ On connection");
-        socket.emit("message", "connecté");
+        socket.emit("message", "user connected");
     }
     /**
      * Triggered when a client disconnects from the Namespace.

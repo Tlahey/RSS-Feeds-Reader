@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SocketOne } from './socket';
+import { SocketRSS } from './SocketRSS';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +9,15 @@ import { SocketOne } from './socket';
 export class AppComponent {
   title = 'rss-feeds-reader';
 
-  constructor(socket: SocketOne){
+  constructor(socket: SocketRSS){
     socket.connect();
+
     console.log("connecting");
-    socket.on('connection', (s) => {
-      console.log("connected");
+
+    socket.getRSSNewFeeds().subscribe(newFeed => {
+      // Traitement sur l'arrivé d'un nouveau feed
     });
-    socket.getMessage().subscribe((message => console.log(message)));
+
+    console.log("Init view");
   }
 }

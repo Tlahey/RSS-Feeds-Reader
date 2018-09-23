@@ -6,6 +6,19 @@ export const environment = {
   production: false
 };
 
+export const socketConfiguration = {
+  host: 'http://localhost',
+  port: '8080',
+  path: '/socket',
+  namespace: '/RSS'
+}
+
+export const apiRestConfiguration = {
+  host: 'http://localhost',
+  port: '8080',
+  routesUrl: "/rest/routes"
+}
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

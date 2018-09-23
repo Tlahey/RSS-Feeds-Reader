@@ -1,20 +1,12 @@
 import { Controller, Get, PathParams } from "@tsed/common";
 
-interface Calendar{
-    id: string;
-    name: string;
-}
+@Controller("/RSS")
+export class RSSCtrl {
 
-@Controller("/rss")
-export class CalendarCtrl {
-
-    @Get("/:id")
-    async get(
-        @PathParams("id") id: string
-    ): Promise<Calendar> {
-
+    @Get("/")
+    async get(): Promise<any> {
         return {
-            id,
+            id: 0,
             name: "test"
         };
     }
