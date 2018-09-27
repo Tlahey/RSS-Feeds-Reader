@@ -5,6 +5,7 @@ import Path = require("path");
 import "@tsed/servestatic";
 import "@tsed/socketio";
 import { DataService } from "./services/data.service";
+import { ConfigurationService } from "./services/configuration.service";
 
 const rootDir = Path.resolve(__dirname);
 
@@ -67,6 +68,10 @@ export class Server extends ServerLoader {
         let routes = this._getRoutes(routeSrv.getAll());
         let routesString = JSON.stringify(routes, null, 4);
         Server.Routes = routesString;
+
+        // Réaliser un interval pour récupérer les sockets via la configuration
+        // On charge toutes les configuration RSS
+        let configuration = new ConfigurationService().Initialize();
 
     }
    

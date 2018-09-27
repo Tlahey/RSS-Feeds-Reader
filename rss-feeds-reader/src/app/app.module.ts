@@ -6,7 +6,7 @@ import { SocketIoModule } from 'ngx-socket-io';
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
 import { RestService } from './services/rest.service';
-import { SocketRSS } from './SocketRSS';
+import { SocketRSS } from './services/SocketRSS';
 import { ConfigurationService } from './services/configuration.service';
 import { HttpModule } from '@angular/http';
 

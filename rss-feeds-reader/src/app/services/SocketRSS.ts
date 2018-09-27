@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { map, filter, scan } from 'rxjs/operators';
-import { socketConfiguration } from '../environments/environment';
+import { socketConfiguration } from '../../environments/environment';
 
 @Injectable()
 export class SocketRSS extends Socket{
