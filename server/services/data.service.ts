@@ -8,7 +8,12 @@ export class DataService{
     constructor(){ }
 
     // Récupère le tableau des feeds
-    GetRssFeeds() : any{
+    GetRSSConfigurationFeeds() : Array<IRssFeeds>{
         return JSON.parse(fs.readFileSync(`${rootDir}/../assets/database/RSSFeeds.json`, 'utf8'));
+    }
+
+    GetRSSConfigurationFeed(guid : string) : IRssFeeds{
+        let configuration = this.GetRSSConfigurationFeeds();
+        return configuration.find(c => c.guid == guid);
     }
 }

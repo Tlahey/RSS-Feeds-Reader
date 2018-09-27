@@ -68,9 +68,6 @@ export class Server extends ServerLoader {
         let routesString = JSON.stringify(routes, null, 4);
         Server.Routes = routesString;
 
-        // PART TESTS
-        let dataSrv = new DataService();
-        dataSrv.GetRssFeeds();
     }
    
     public $onServerInitError(err){

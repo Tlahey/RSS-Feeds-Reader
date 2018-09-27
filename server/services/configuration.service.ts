@@ -1,8 +1,9 @@
 import { DataService } from './data.service';
-export class configurationService{
+import IRssFeeds from '../models/RssFeeds.model';
+export class ConfigurationService{
     constructor(){ }
 
-    GetConfiguration(){
-        return new DataService().GetRssFeeds();
+    GetConfiguration() : Array<IRssFeeds>{
+        return new DataService().GetRSSConfigurationFeeds();
     }
 }

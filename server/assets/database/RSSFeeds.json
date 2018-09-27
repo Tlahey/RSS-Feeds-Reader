@@ -1,5 +1,6 @@
 [
     {
+        "guid": "NASA_VIDEO",
         "title": "NASA video",
         "rss_url": "https://www.nasa.gov/rss/dyn/TWAN_vodcast.rss",
         "options": {
