@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { apiRestConfiguration } from "../../environments/environment";
 import { catchError } from 'rxjs/operators';
 import { AppModule } from '../app.module';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class RestService{
@@ -10,7 +11,7 @@ export class RestService{
     constructor(private http: HttpClient){
     }
 
-    private _getRoute(routeName : string){
+    private _getRoute(routeName : string, pathsArgs? : any, queyArgs? : any) : Observable<any>{
 
         let routes = AppModule.Route;
         let splitedRoute = routeName.split('.');
@@ -20,7 +21,7 @@ export class RestService{
             url: string
         } = routes[splitedRoute[0]][splitedRoute[1]];
 
-        // TODO: regex process parameters :xxx
+        routeObject.url = this._compileUrl(routeObject.url, pathsArgs);
 
         switch(routeObject.method){
             case "get":
@@ -30,13 +31,22 @@ export class RestService{
         throw new Error("No route found");
     }
 
+    private _compileUrl(url : string, pathArgs : any) {
+        for (var key in pathArgs) {
+            url = url.replace(`:${key}`, encodeURIComponent(pathArgs[key]));
+        }
+        return url;
+    }
+
     private _getRoutesConfigurations(){
         return this.http.get(`${apiRestConfiguration.host}:${apiRestConfiguration.port}${apiRestConfiguration.routesUrl}`);
     }
 
 
-    public GetRSSFeeds(){
-        return this._getRoute('RSSCtrl.get');
+    public GetRSSFeeds(guid?: string){
+        return this._getRoute('RSSCtrl.get', {
+            guid
+        });
     }
 
 

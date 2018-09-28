@@ -2,7 +2,7 @@ import { Deferred } from './../utils/Deferred';
 import IRssFeeds, { IFeed, IFeedItem } from "../models/RssFeeds.model";
 import {Event} from "typescript.events";
 import { Logger } from '../utils/Logger';
-
+import * as fs from 'fs';
 
 let Parser = require('rss-parser');
 let parser = new Parser();
@@ -21,8 +21,10 @@ export class RSSService{
     }
 
     public async RequestHttpRSS(url : string) : Promise<IFeed> {
-        RSSService.logger.debug("RequestHttpRSS", `Récupération du flux RSS ayant pour URL [${url}]`)
-        return await parser.parseURL(url);
+        RSSService.logger.debug("RequestHttpRSS", `Récupération du flux RSS ayant pour URL [${url}]`);
+        let requestData = await parser.parseURL(url);
+        // fs.writeFileSync(`c:/temp/${new Date().toISOString().replace(':', '_').replace(':', '_')}.json`, JSON.stringify(requestData));
+        return requestData;
     }
 
 }
@@ -47,13 +49,27 @@ export class RSS extends Event {
 
     get Configuration() { return this._rssConfiguration }
     get Guid() { return this._rssConfiguration.guid }
-    get Feeds() : Array<IFeedItem>{ return this._properties.items }
+    get Feeds() : Array<IFeedItem>{ return this._properties.items.map(i => { 
+        i.guid = this._rssConfiguration.guid; 
+        i.icon = this._rssConfiguration.options.icon || this._properties.image.url;
+        return i;
+    }) }
+    get Informations() { 
+        return {
+            'title': this._properties.title,
+            'image': this._properties.image,
+            'description': this._properties.description,
+            'link': this._properties.link,
+            'guid': this._rssConfiguration.guid
+        }
+    }
     get IsInitialized() : Promise<RSS> { return this._isInitilized.promise }
 
     public async Initialize(){
         RSS.logger.debug("Initialize", `Lancement de l'initialisation pour le RSS guid [${this.Guid}]`)
         // On télécharge le feed 
         this._properties = await this._rssSrv.RequestHttpRSS(this._rssConfiguration.rss_url);
+        RSS.logger.debug("Initialize", `Récupération des données RSS pour le guid [${this.Guid}] `, JSON.stringify(this._properties));
         this._createHandlers();
         this._isInitilized.resolve(this);
         RSS.logger.debug("Initialize", `Fin de l'initialisation pour le RSS guid [${this.Guid}] properties `, this._properties)

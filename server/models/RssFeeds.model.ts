@@ -2,7 +2,10 @@ export default interface IRssFeeds{
     guid: string,
     title: string,
     rss_url: string,
-    options: any
+    options: {
+        icon: string,
+        [key: string]: any
+    }
 }
 
 export interface IFeedItem{
@@ -14,7 +17,8 @@ export interface IFeedItem{
     contentSnippet: string,
     guid: string,
     categories: Array<string>,
-    isoDate: string
+    isoDate: string,
+    icon? : string,
 }
 
 export interface IFeed{

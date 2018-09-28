@@ -33,6 +33,7 @@ import {
   } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
+import { NoopAnimationPlayer } from '@angular/animations';
 
 @NgModule({
     exports: [
