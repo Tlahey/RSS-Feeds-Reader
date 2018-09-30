@@ -3,6 +3,11 @@ import IRssFeeds, { IFeed, IFeedItem } from "../models/RssFeeds.model";
 import {Event} from "typescript.events";
 import { Logger } from '../utils/Logger';
 import * as fs from 'fs';
+import { environment } from '../environement/environment';
+import { SocketService, Nsp } from '@tsed/socketio';
+import { MySocketService } from './socket.service';
+import { Inject } from '@tsed/common';
+import { Server } from '../server';
 
 let Parser = require('rss-parser');
 let parser = new Parser();
@@ -30,20 +35,25 @@ export class RSSService{
 }
 
 export class RSS extends Event {
-
     static logger = new Logger(RSS.name);
 
     static RSS : Array<RSS> = [];
 
     private _rssSrv : RSSService;
     private _properties : IFeed = undefined;
+    private _socket : MySocketService = undefined;
 
     private _isInitilized : Deferred<RSS>;
 
+    private _rssCheckUpdateInterval;
+    
     constructor(private _rssConfiguration : IRssFeeds){
         super();
         this._rssSrv = new RSSService();
         this._isInitilized = new Deferred<RSS>();
+
+        this._socket = Server.SocketService;
+
         RSS.logger.debug("ctor", `Création d'un objet RSS pour la configuration `, this._rssConfiguration);
     }
 
@@ -54,6 +64,7 @@ export class RSS extends Event {
         i.icon = this._rssConfiguration.options.icon || this._properties.image.url;
         return i;
     }) }
+
     get Informations() { 
         return {
             'title': this._properties.title,
@@ -69,24 +80,50 @@ export class RSS extends Event {
         RSS.logger.debug("Initialize", `Lancement de l'initialisation pour le RSS guid [${this.Guid}]`)
         // On télécharge le feed 
         this._properties = await this._rssSrv.RequestHttpRSS(this._rssConfiguration.rss_url);
-        RSS.logger.debug("Initialize", `Récupération des données RSS pour le guid [${this.Guid}] `, JSON.stringify(this._properties));
+        RSS.logger.debug("Initialize", `Récupération des données RSS pour le guid [${this.Guid}] `/*, JSON.stringify(this._properties)*/);
         this._createHandlers();
+        this._rssCheckUpdateInterval = setInterval(this.UpdateFeeds.bind(this), this._rssConfiguration.options.refreshInterval * 1000);
         this._isInitilized.resolve(this);
-        RSS.logger.debug("Initialize", `Fin de l'initialisation pour le RSS guid [${this.Guid}] properties `, this._properties)
+        RSS.logger.debug("Initialize", `Fin de l'initialisation pour le RSS guid [${this.Guid}] properties `/*, this._properties*/);
         return this;
     }
 
     public UpdateFeeds(){
         // Récupère le feed et met seulement à jour les nouveaux items
         // Retourne les nouveaux items en réponse de fonction
-        this.emit('newContent', { })
+        RSS.logger.debug("UpdateFeeds", `Lancement d'une mise à jour du RSS guid [${this.Guid}] `);
+        this._rssSrv.RequestHttpRSS(this._rssConfiguration.rss_url).then(rssFeed => {
+
+            this.emit('newContent', [1]);
+
+            /*
+            let newItemFeed = [];
+            rssFeed.items.forEach(item => {
+                let identity = item.id || item.guid;
+                if(this.Feeds.find(f => f.guid == identity || f.id == identity) == undefined)
+                    newItemFeed.unshift(identity);
+            });
+
+            if(newItemFeed.length > 0){
+                // On remove le count des éléments dans tableau des items
+                this._properties.items.splice(-1 * newItemFeed.length, newItemFeed.length);
+                RSS.logger.debug("UpdateFeeds", `De nouveaux flux RSS guid [${this.Guid}] ont été trouvés `, newItemFeed);
+                this.emit('newContent', newItemFeed);
+            }
+            */
+        });
     }
 
     private _createHandlers(){
-        RSS.logger.debug("_createHandlers", `Création des events handlers pour le RSS guid [${this.Guid}]`)
-
+        RSS.logger.debug("_createHandlers", `Création des events handlers pour le RSS guid [${this.Guid}]`);
         this.on('newContent', (data) => {
+            this._socket.broadCastNewFeeds(this.Feeds.filter((element, index) => { 
+                return index < data.length;
+            }));
 
+            let soundObj = this._rssConfiguration.options.sounds.find(s => s.trigger == "default");
+            if(soundObj)
+                this._socket.playAudio(soundObj.name);
         });
     }
 }

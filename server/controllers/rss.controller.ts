@@ -5,7 +5,7 @@ import { Controller, Get, PathParams } from "@tsed/common";
 @Controller("/RSS")
 export class RSSCtrl {
 
-    @Get("/:guid")
+    @Get("/")
     async get(
         // @PathParams("guid") guid : string
     ): Promise<any> {

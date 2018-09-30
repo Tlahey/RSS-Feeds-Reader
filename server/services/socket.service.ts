@@ -1,42 +1,37 @@
 import * as SocketIO from "socket.io";
-import {SocketService, IO, Nsp, Socket, SocketSession, Input, Args, Emit} from "@tsed/socketio";
-import { ConfigurationService } from "./configuration.service";
-import { RSS } from "./rss.service";
+import {SocketService, Nsp, Socket, SocketSession, Emit, Input, Broadcast} from "@tsed/socketio";
 
 @SocketService("/RSS")
 export class MySocketService {
+    @Nsp nsp: SocketIO.Namespace;
 
-    constructor(@IO private io: SocketIO.Server) {}
+    static GetInstance : MySocketService;
+
     /**
      * Triggered the namespace is created
      */
     $onNamespaceInit(nsp: SocketIO.Namespace) {
-        console.log("------ init namespace ", nsp.name);
+        // MySocketService.GetInstance = this;
     }
     /**
      * Triggered when a new client connects to the Namespace.
      */
     $onConnection(@Socket socket: SocketIO.Socket, @SocketSession session: SocketSession) {
-        console.log("------ On connection");
-        socket.emit("message", "user connected");
+        console.log("----------------- connected");
+        // this.helloAll();
     }
     /**
      * Triggered when a client disconnects from the Namespace.
      */
     $onDisconnect(@Socket socket: SocketIO.Socket) {
-        console.log("------ On disconnection");
+
     }
 
+    broadCastNewFeeds(newFeeds : any){
+        this.nsp.emit('news', newFeeds);
+    }
 
-    @Input("eventName")
-    @Emit("responseEventName") // or Broadcast or BroadcastOthers
-    async myMethod(@Args(0) userName: string, @SocketSession session: SocketSession) {
-
-        const user = session.get("user") || {}
-        user.name = userName;
-
-        session.set("user", user);
-
-        return user;
+    playAudio(audioName : string){
+        this.nsp.emit('playSound', audioName);
     }
 }

@@ -33,7 +33,8 @@ export class RestService{
 
     private _compileUrl(url : string, pathArgs : any) {
         for (var key in pathArgs) {
-            url = url.replace(`:${key}`, encodeURIComponent(pathArgs[key]));
+            let value = pathArgs[key] || '';
+            url = url.replace(`:${key}`, encodeURIComponent(value));
         }
         return url;
     }

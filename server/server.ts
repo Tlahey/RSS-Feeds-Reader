@@ -1,3 +1,4 @@
+import { MySocketService } from './services/socket.service';
 import * as Express from "express";
 import {ServerLoader, ServerSettings, Delete, Authenticated, BodyParams, Required, GlobalAcceptMimesMiddleware, Inject, RouteService} from "@tsed/common";
 import Path = require("path");
@@ -26,6 +27,7 @@ const rootDir = Path.resolve(__dirname);
 export class Server extends ServerLoader {
 
     static Routes : any;
+    static SocketService : MySocketService;
 
     /**
      * This method let you configure the middleware required by your application to works.
@@ -60,6 +62,7 @@ export class Server extends ServerLoader {
     }
 
     @Inject(RouteService)
+    @Inject(MySocketService)
     public $onReady(){
         console.log('Server started...');
 
@@ -68,6 +71,9 @@ export class Server extends ServerLoader {
         let routes = this._getRoutes(routeSrv.getAll());
         let routesString = JSON.stringify(routes, null, 4);
         Server.Routes = routesString;
+
+        let socketSrv : MySocketService = this['_injector'].get(MySocketService)
+        Server.SocketService = socketSrv;
 
         // Réaliser un interval pour récupérer les sockets via la configuration
         // On charge toutes les configuration RSS

@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { SocketRSS } from './services/SocketRSS';
 import { ConfigurationService } from 'src/app/services/configuration.service';
 import { MatTableDataSource, MatSort, MatSortable } from '@angular/material';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +44,11 @@ export class AppComponent {
       };
 
       console.log(this._feeds);
+    })
+
+    const sequence = new Observable(socket.getRSSNewFeeds.bind(socket));
+    sequence.subscribe(data => {
+      this.dataSource.data = (data as Array<any>).concat(this.dataSource.data);
     })
   }
 

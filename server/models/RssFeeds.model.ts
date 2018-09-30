@@ -1,11 +1,6 @@
-export default interface IRssFeeds{
-    guid: string,
-    title: string,
-    rss_url: string,
-    options: {
-        icon: string,
-        [key: string]: any
-    }
+export interface IRssFeedsSound{
+    trigger: string,
+    name: string,
 }
 
 export interface IFeedItem{
@@ -15,7 +10,8 @@ export interface IFeedItem{
     creator?: string,
     content: string,
     contentSnippet: string,
-    guid: string,
+    guid?: string,
+    id?: string,
     categories: Array<string>,
     isoDate: string,
     icon? : string,
@@ -36,4 +32,16 @@ export interface IFeed{
     language? : string,
     copyright? : string,
     items: Array<IFeedItem>
+}
+
+export default interface IRssFeeds{
+    guid: string,
+    title: string,
+    rss_url: string,
+    options: {
+        icon: string,
+        refreshInterval: number,
+        sounds: Array<IRssFeedsSound>,
+        [key: string]: any
+    }
 }
