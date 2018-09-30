@@ -94,9 +94,9 @@ export class RSS extends Event {
         RSS.logger.debug("UpdateFeeds", `Lancement d'une mise à jour du RSS guid [${this.Guid}] `);
         this._rssSrv.RequestHttpRSS(this._rssConfiguration.rss_url).then(rssFeed => {
 
-            this.emit('newContent', [1]);
+            // this.emit('newContent', [rssFeed.items[0]]);
 
-            /*
+            
             let newItemFeed = [];
             rssFeed.items.forEach(item => {
                 let identity = item.id || item.guid;
@@ -110,20 +110,29 @@ export class RSS extends Event {
                 RSS.logger.debug("UpdateFeeds", `De nouveaux flux RSS guid [${this.Guid}] ont été trouvés `, newItemFeed);
                 this.emit('newContent', newItemFeed);
             }
-            */
+            
         });
     }
 
     private _createHandlers(){
         RSS.logger.debug("_createHandlers", `Création des events handlers pour le RSS guid [${this.Guid}]`);
         this.on('newContent', (data) => {
+            
             this._socket.broadCastNewFeeds(this.Feeds.filter((element, index) => { 
                 return index < data.length;
             }));
 
-            let soundObj = this._rssConfiguration.options.sounds.find(s => s.trigger == "default");
-            if(soundObj)
-                this._socket.playAudio(soundObj.name);
+            // On joue le son de la 1ère data
+            let firstData = data[0]; 
+            // On boucle sur l'ensemble des sounds
+            for(var i = 0, ii = this._rssConfiguration.options.sounds.length; i < ii; i++){
+                let soundObj = this._rssConfiguration.options.sounds[i];
+                if(soundObj.trigger == "default" || firstData[soundObj.trigger] == soundObj.triggerValue){
+                    i = ii;
+                    let soundRandomName = soundObj.soundNames[Math.floor(Math.random() * soundObj.soundNames.length)];
+                    this._socket.playAudio(soundRandomName);
+                }
+            }
         });
     }
 }

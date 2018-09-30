@@ -1,6 +1,7 @@
 export interface IRssFeedsSound{
     trigger: string,
-    name: string,
+    triggerValue: string,
+    soundNames: Array<string>,
 }
 
 export interface IFeedItem{
