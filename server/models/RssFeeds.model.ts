@@ -12,6 +12,7 @@ export interface IFeedItem{
     content: string,
     contentSnippet: string,
     guid?: string,
+    configurationGuid? : string,
     id?: string,
     categories: Array<string>,
     isoDate: string,

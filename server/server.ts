@@ -7,11 +7,19 @@ import "@tsed/servestatic";
 import "@tsed/socketio";
 import { DataService } from "./services/data.service";
 import { ConfigurationService } from "./services/configuration.service";
+import { environment } from './environement/environment';
 
 const rootDir = Path.resolve(__dirname);
 
+if(environment.proxy){
+    process.env.http_proxy = 'http://10.37.102.218:3128';
+    var globalTunnel = require('global-tunnel-ng');
+    globalTunnel.initialize();
+}
+
 @ServerSettings({
     rootDir,
+    port: 7999,
     acceptMimes: ["application/json"],
     mount: {
         '/rest': `${rootDir}/controllers/*.js`

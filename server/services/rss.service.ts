@@ -60,7 +60,7 @@ export class RSS extends Event {
     get Configuration() { return this._rssConfiguration }
     get Guid() { return this._rssConfiguration.guid }
     get Feeds() : Array<IFeedItem>{ return this._properties.items.map(i => { 
-        i.guid = this._rssConfiguration.guid; 
+        i.configurationGuid = this._rssConfiguration.guid;         
         i.icon = this._rssConfiguration.options.icon || this._properties.image.url;
         return i;
     }) }
@@ -107,6 +107,7 @@ export class RSS extends Event {
             if(newItemFeed.length > 0){
                 // On remove le count des éléments dans tableau des items
                 this._properties.items.splice(-1 * newItemFeed.length, newItemFeed.length);
+                this._properties.items = newItemFeed.concat(this._properties.items);
                 RSS.logger.debug("UpdateFeeds", `De nouveaux flux RSS guid [${this.Guid}] ont été trouvés `, newItemFeed);
                 this.emit('newContent', newItemFeed);
             }
