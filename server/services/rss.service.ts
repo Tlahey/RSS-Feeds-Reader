@@ -101,7 +101,7 @@ export class RSS extends Event {
             rssFeed.items.forEach(item => {
                 let identity = item.id || item.guid;
                 if(this.Feeds.find(f => f.guid == identity || f.id == identity) == undefined)
-                    newItemFeed.unshift(identity);
+                    newItemFeed.unshift(item);
             });
 
             if(newItemFeed.length > 0){
