@@ -19,7 +19,7 @@ if(environment.proxy){
 
 @ServerSettings({
     rootDir,
-    port: 7999,
+    port: 8080,
     acceptMimes: ["application/json"],
     mount: {
         '/rest': `${rootDir}/controllers/*.js`
