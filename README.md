@@ -36,22 +36,11 @@ Now you can launch the server with this follow command (on server folder)
 $ node server.js
 ```
 
+And go on `http://localhost:8080`
 
+## Configuration
 
+You can configurate any RRS feeds. You can find an example on configuration in `server/assets/database/RSSFeeds.json`.
 
+**TODO: Need more configuration informations**
 
-
-
-```
-npm install
-node server/server.js
-```
-
-How to rebuild web
-
-On web app
-```
-npm build
-```
-
-All sources go to server/webapp
