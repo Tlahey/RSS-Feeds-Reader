@@ -12,7 +12,7 @@ import { environment } from './environement/environment';
 const rootDir = Path.resolve(__dirname);
 
 if(environment.proxy){
-    process.env.http_proxy = 'http://10.37.102.218:3128';
+    process.env.http_proxy = environment.proxy;
     var globalTunnel = require('global-tunnel-ng');
     globalTunnel.initialize();
 }
